@@ -139,7 +139,7 @@ if(!USER){
 	<tr>
 	<td style='width:30%'>".$srn1." + ".$srn2." =</td>
 	<td style='width:70%'>
-	".$rs->form_text("security_total", 20, "", 3)."
+	".$rs->form_text("security_total", 20, "", 20)."
 	</td>
 	</tr>
 	<tr style='vertical-align:top'>
