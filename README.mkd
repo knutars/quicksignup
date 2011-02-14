@@ -1,11 +1,11 @@
 # IMPORTANT!!!
 
-Before this plugin or menu item will work correctly with e107 you will need to rename the directory you're presented with to `quicksignup`. In most cases this can be done
+Before this plugin or menu item will work correctly with e107 you will need to rename the directory you're presented with to `quicksignup_menu`. In most cases this can be done
 inside the archive program you use to decompress the tar/zipball.
 
 # Quick Signup
 
-Allow visitors of your website the ability to signup with very little information required from a menu item.
+Allow visitors of your website to quickly signup via a menu item.
 
 ## Configuration
 

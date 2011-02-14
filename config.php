@@ -25,14 +25,14 @@ $text = "
 	</tr>
 
 	<tr>
-	<td colspan='2' class='forumheader' style='text-align: center;'><input class='button' type='submit' name='update_menu' value='".TWITS_LAN003."' /></td>
+	<td colspan='2' class='forumheader' style='text-align: center;'><input class='button' type='submit' name='update_menu' value='Save Settings!' /></td>
 	</tr>
 	</table>
 	</form>
 	</div>
 	";
 
-$ns->tablerender(TWITS_LAN004, $text);
+$ns->tablerender("Configure Quick Signup", $text);
 
 require_once(e_ADMIN."footer.php");
 
