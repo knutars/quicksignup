@@ -10,6 +10,13 @@ require_once(e_HANDLER."mail.php");
 
 $rs = new form;
 
+$use_imagecode = ($menu_pref['quicksignup']['captcha'] && extension_loaded('gd'));
+
+if($use_imagecode){
+	include_once(e_HANDLER.'secure_img_handler.php');
+	$sec_img = new secure_image;
+}
+
 $maxinteger = (($menu_pref['quicksignup']['maxinteger']) ? $menu_pref['quicksignup']['maxinteger'] : 50);
 
 // stupidly simple security check; part 1
@@ -141,7 +148,19 @@ if(!USER){
 	<td style='width:70%'>
 	".$rs->form_text("security_total", 20, "", 20)."
 	</td>
-	</tr>
+	</tr>";
+	if($use_imagecode){
+		$text .= "
+		<tr>
+		<td colspan='2'>
+		<input type='hidden' name='rand_num' value='".$sec_img->random_number."' />
+		".$sec_img->r_image()."
+		<br />
+		".$rs->form_text("code_verify", 20, "", 20)."
+		</td>
+		</tr>";
+	}
+	$text .= "
 	<tr style='vertical-align:top'>
 	<td colspan='2' style='text-align:center'>
 	<input class='button' type='submit' name='adduser' value='Sign up!' />

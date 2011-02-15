@@ -16,14 +16,18 @@ $text = "
 	<div style='text-align:center'>
 	<form action='".e_SELF."?".e_QUERY."' method='post'>
 	<table style='width:85%' class='fborder' >
-
 	<tr>
-	<td style='width:30%' class='forumheader3'>Maximum Addition Integer<br /><small>1 + [this number] =</small></td>
+	<td style='width:30%' class='forumheader3'>Maximum Addition Integer<br /><i>1 + [this number] =</i></td>
 	<td style='width:70%' class='forumheader3'>
 	<input type='text' class='tbox' name='pref[maxinteger]' value='".(($menu_pref['quicksignup']['maxinteger']) ? $menu_pref['quicksignup']['maxinteger'] : "")."' />
 	</td>
 	</tr>
-
+	<tr>
+	<td style='width:30%' class='forumheader3'>Use CAPTCHA image verification?</td>
+	<td style='width:70%' class='forumheader3'>
+	<input type='checkbox' name='pref[captcha]' value='1' ".($menu_pref['quicksignup']['captcha'] == 1 ? " checked='checked'" : "")." />
+	</td>
+	</tr>
 	<tr>
 	<td colspan='2' class='forumheader' style='text-align: center;'><input class='button' type='submit' name='update_menu' value='Save Settings!' /></td>
 	</tr>
