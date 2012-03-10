@@ -10,13 +10,6 @@ require_once(e_HANDLER."mail.php");
 
 $rs = new form;
 
-$use_imagecode = ($menu_pref['quicksignup']['captcha'] && extension_loaded('gd'));
-
-if($use_imagecode){
-	include_once(e_HANDLER.'secure_img_handler.php');
-	$sec_img = new secure_image;
-}
-
 $maxinteger = (($menu_pref['quicksignup']['maxinteger']) ? $menu_pref['quicksignup']['maxinteger'] : 50);
 
 // stupidly simple security check; part 1
@@ -35,56 +28,56 @@ if(isset($_POST['adduser'])){
 	$loginname = strip_tags($_POST['loginname']);
 
 	if(strstr($displayname, "#") || strstr($displayname, "=")){
-		$message = "Invalid characters in username";
+		$message = "Ogiltiga tecken i användarnamnet";
 		$error = TRUE;
 	}
 	$displayname = trim(str_replace("&nbsp;", "", $displayname));
 	if($displayname == "Anonymous"){
-		$message = "That display name cannot be accepted as valid, please choose a different display name";
+		$message = "Visningsnamnet är inte giltigt, välj ett annat visningsnamn.";
 		$error = TRUE;
 	}
 	if($sql->db_Select("user", "*", "user_name='".$displayname."' ")){
-		$message = "That display name already exists in the database, please choose a different display name";
+		$message = "Visningsnamnet är upptaget, välj ett annat visningsnamn.";
 		$error = TRUE;
 	}
 	if($sql->db_Select("user", "user_loginname", "user_loginname='".$loginname."' ")){
-		$message = "That login name already exists in the database, please choose a different login name";
+		$message = "Användarnamnet är upptaget, välj ett annat användarnamn.";
 		$error = TRUE;
 	}
 	if($_POST['password1'] != $_POST['password2']){
-		$message = "The two passwords do not match";
+		$message = "Lösenorden matchar inte varandra";
 		$error = TRUE;
 	}
 
 	if(check_class($pref['displayname_class'])){
 		if($displayname == "" || $loginname == "" || $_POST['password1'] == "" || $_POST['password2'] == ""){
-			$message = "You left required field(s) blank";
+			$message = "Du utelämnade obligatoriskt fält";
 			$error = TRUE;
 		}
 	}else{
 		if($loginname == "" || $_POST['password1'] == "" || $_POST['password2'] == ""){
-			$message = "You left required field(s) blank";
+			$message = "Du utelämnade obligatoriskt fält";
 			$error = TRUE;
 		}
 	}
 
 	if(trim($_POST['security_total']) != $srt){
-		$message = "You can't add or you're a robot!";
+		$message = "Du kan inte addera eller så är du en bot!";
 		$error = TRUE;
 	}
 
 	if(!varset($pref['disable_emailcheck'], FALSE)){
 		if(!check_email($_POST['email'])){
-			$message = "That doesn't appear to be a valid email address";
+			$message = "Epostadressen verkar inte vara giltig";
 			$error = TRUE;
 		}else if($sql->db_Count("user", "(*)", "WHERE user_email='".$_POST['email']."' AND user_ban='1' ")){
-			$message = "Email address is already used by a banned user";
+			$message = "Epostadressen är registrerad med en blockerad användare";
 			$error = TRUE;
 		}else if($sql->db_Count("banlist", "(*)", "WHERE banlist_ip='".$_POST['email']."'")){
-			$message = "Email address is banned";
+			$message = "Epostadressen är blockerad";
 			$error = TRUE;
 		}else if($sql->db_Count("user", "(*)", "WHERE user_email='".$_POST['email']."' ")){
-			$message = "Email address is already in use";
+			$message = "Epostadressen används redan";
 			$error = TRUE;
 		}
 	}
@@ -92,9 +85,9 @@ if(isset($_POST['adduser'])){
 	if(!$error){
 		$sql -> db_Insert("user", "0, '$displayname', '$loginname',  '', '".md5($_POST['password1'])."', '', '".$_POST['email']."', '', '', '', '1', '".time()."', '".time()."', '".time()."', '0', '0', '0', '0', '0', '0', '0', '', '', '0', '0', '', '', '', '', '".time()."', ''");
 
-		sendemail($_POST['email'], "Your account over at ".SITENAME." has been created.", "You account at ".SITEURL." has been created with the following information:\n\nLogin Name: ".$loginname."\nPassword: ".$_POST['password']."\n\nYou should make your way over to the site and update your profile information as quickly as possible.\n\nThanks for your interest in our website.\n\n".SITENAME." Staff");
+		sendemail($_POST['email'], "Ditt användarkonto på ".SITENAME." har skapats.", "Ditt konto på ".SITEURL." har skapats med följande information:\n\nInloggningasnamn: ".$loginname."\nLösenord: ".$_POST['password']."\n\nDu bör ta dig till webbplatsen för att uppdatera din profil så snart du kan.\n\nTack för visat intresse för vår webbplats.\n\n".SITENAME." Admin");
 
-		$message = "Your account has been created. We have sent a message to your email address with your account information.";
+		$message = "Ditt användarkonto har registrerats och ett meddelande innehållande kontoinformationen har skickats till dig.";
 	}
 }
 
@@ -112,7 +105,7 @@ if(!USER){
 
 	if(check_class($pref['displayname_class'])){
 		$text .= "<tr>
-		<td style='width:30%'>Display Name:</td>
+		<td style='width:30%'>Visat namn:</td>
 		<td style='width:70%'>
 		".$rs->form_text("name", 20, "", varset($pref['displayname_maxlength'],15))."
 		</td>
@@ -120,25 +113,25 @@ if(!USER){
 	}
 
 	$text .= "<tr>
-	<td style='width:30%'>Username:</td>
+	<td style='width:30%'>Användarnamn:</td>
 	<td style='width:70%'>
 	".$rs->form_text("loginname", 20, "", varset($pref['loginname_maxlength'],30))."
 	</td>
 	</tr>
 	<tr>
-	<td style='width:30%'>Password:</td>
+	<td style='width:30%'>Lösenord:</td>
 	<td style='width:70%'>
 	".$rs->form_password("password1", 20, "", 20)."
 	</td>
 	</tr>
 	<tr>
-	<td style='width:30%'>Re-type Password:</td>
+	<td style='width:30%'>Lösenordet igen:</td>
 	<td style='width:70%'>
 	".$rs->form_password("password2", 20, "", 20)."
 	</td>
 	</tr>
 	<tr>
-	<td style='width:30%'>Email Address:</td>
+	<td style='width:30%'>Din e-post</td>
 	<td style='width:70%'>
 	".$rs->form_text("email", 20, "", 100)."
 	</td>
@@ -148,22 +141,10 @@ if(!USER){
 	<td style='width:70%'>
 	".$rs->form_text("security_total", 20, "", 20)."
 	</td>
-	</tr>";
-	if($use_imagecode){
-		$text .= "
-		<tr>
-		<td colspan='2'>
-		<input type='hidden' name='rand_num' value='".$sec_img->random_number."' />
-		".$sec_img->r_image()."
-		<br />
-		".$rs->form_text("code_verify", 20, "", 20)."
-		</td>
-		</tr>";
-	}
-	$text .= "
+	</tr>
 	<tr style='vertical-align:top'>
 	<td colspan='2' style='text-align:center'>
-	<input class='button' type='submit' name='adduser' value='Sign up!' />
+	<input class='button' type='submit' name='adduser' value='Registrera!' />
 	<input type='hidden' name='srt' value='".$srn1."/".$srn2."' />
 	<input type='hidden' name='e-token' value='".e_TOKEN."' />
 	</td>
@@ -172,7 +153,7 @@ if(!USER){
 	</form>
 	</div>";
 
-	$ns->tablerender("Quick Signup", $text, 'quicksignup');
+	$ns->tablerender("Snabbregistrering", $text, 'quicksignup');
 }
 
 ?>
