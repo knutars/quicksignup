@@ -1,10 +1,10 @@
 <?php
 if (!defined('e107_INIT')) { exit; }
 
-$eplug_name    = "Quick Signup";
+$eplug_name    = "Snabbregistrering";
 $eplug_version = "0.1";
 $eplug_author  = "septor";
-$eplug_description = "Allow visitors of your website to quickly signup via a menu item.";
+$eplug_description = "Medger att besökare snabbregistrerar sig på webbplatsen i en meny.";
 $eplug_compatible  = "e107 v0.7+";
 $eplug_readme      = "";        
 $eplug_folder = "quicksignup_menu";
